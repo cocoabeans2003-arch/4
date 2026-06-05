@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026九州自駕親子自由行</title>
+    <style>
+        :root {
+            --bg-color: #fbf7f2;
+            --grid-color: #f0e6d2;
+            --main-text: #4a4a4a;
+            --light-text: #757575;
+            --nav-border: #e0d4c8;
+            --nav-text: #a1887f;
+            --nav-active-bg: #5d4037;
+            --nav-active-text: #ffffff;
+            --dashed-box: #a3d1f0;
+            --timeline-line: #ffcc80;
+            --time-badge-bg: #fff3e0;
+            --time-badge-text: #ef6c00;
+            --map-btn-bg: #e8f5e9;
+            --map-btn-text: #2e7d32;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Varela Round', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(var(--grid-color) 2px, transparent 2px);
+            background-size: 24px 24px;
+            color: var(--main-text);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        /* 頂部橫幅 */
+        .top-banner {
+            background-color: #fffaf0;
+            background-image: linear-gradient(rgba(255, 250, 240, 0.8), rgba(255, 250, 240, 0.8)), url('https://img.freepik.com/free-vector/hand-drawn-family-traveling-illustration_23-2149480112.jpg');
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #eaddcc;
+            border-radius: 15px;
+            padding: 25px 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .top-banner h1 {
+            color: #ff6b6b;
+            font-size: 28px;
+            margin: 10px 0;
+            text-shadow: 2px 2px 0px #fff, -1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px 0px #fff;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .nav-bar {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 2px dashed var(--nav-border);
+        }
+
+        .nav-btn {
+            background-color: #ffffff;
+            border: 2px solid var(--nav-border);
+            border-radius: 10px;
+            padding: 10px 0; 
+            font-size: 15px; 
+            font-weight: bold;
+            color: var(--nav-text);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn.active {
+            background-color: var(--nav-active-bg);
+            color: var(--nav-active-text);
+            border-color: var(--nav-active-bg);
+            transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn.checklist-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 5px;
+            font-size: 15px; 
+        }
+
+        .content-container {
+            background-color: #ffffff;
+            border: 3px dashed var(--dashed-box);
+            border-radius: 20px;
+            padding: 25px 20px 10px 25px;
+            min-height: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .content-container.active {
+            display: block;
+        }
+
+        .day-header {
+            color: var(--nav-active-bg);
+            font-size: 22px;
+            font-weight: 900;
+            margin: 0 0 20px 0;
+            border-bottom: 3px solid var(--timeline-line);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .timeline-wrapper {
+            border-left: 3px solid var(--timeline-line);
+            padding-left: 20px;
+            margin-left: 5px;
+            padding-bottom: 10px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 35px;
+        }
+
+        .time-badge {
+            background-color: var(--time-badge-bg);
+            color: var(--time-badge-text);
+            font-size: 13px;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+            margin-left: -32px;
+            border: 2px solid #fff;
+        }
+
+        .spot-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #3e2723;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .spot-info {
+            font-size: 14px;
+            color: var(--light-text);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .info-icon {
+            opacity: 0.7;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .highlight-text {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .map-btn {
+            background-color: var(--map-btn-bg);
+            color: var(--map-btn-text);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+            transition: opacity 0.2s;
+        }
+        .map-btn:hover {
+            opacity: 0.8;
+        }
+
+        .checklist-wrapper { padding: 5px; }
+        .check-group { margin-bottom: 20px; }
+        .check-group h3 {
+            color: #8d6e63;
+            font-size: 16px;
+            margin-bottom: 12px;
+            border-bottom: 2px dashed #eee;
+            padding-bottom: 5px;
+        }
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            font-size: 15px;
+            color: #4a4a4a;
+            font-weight: bold;
+        }
+        .check-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #ff8a65;
+        }
+        .check-item input[type="checkbox"]:checked + label {
+            text-decoration: line-through;
+            color: #bdbdbd;
+        }
+
+        /* 備案區塊樣式 */
+        .backup-plan {
+            background-color: #fff8e1;
+            border: 2px dashed #ffc107;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 30px;
+        }
+        .backup-plan h3 {
+            color: #f57f17;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .backup-plan p {
+            margin: 5px 0;
+            color: #5d4037;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-banner">
+        <h1>2026九州親子自由行</h1>
+    </div>
+
+    <div class="nav-bar" id="navBar">
+        <button class="nav-btn checklist-btn active" onclick="showTab(this, 'checklist')">💼 行前清單</button>
+        <button class="nav-btn" onclick="showTab(this, 'day1')">7/2 (四)</button>
+        <button class="nav-btn" onclick="showTab(this, 'day2')">7/3 (五)</button>
+        <button class="nav-btn" onclick="showTab(this, 'day3')">7/4 (六)</button>
+        <button class="nav-btn" onclick="showTab(this, 'day4')">7/5 (日)</button>
+        <button class="nav-btn" onclick="showTab(this, 'day5')">7/6 (一)</button>
+        <button class="nav-btn" onclick="showTab(this, 'day6')">7/7 (二)</button>
+        <button class="nav-btn" onclick="showTab(this, 'day7')">7/8 (三)</button>
+        <button class="nav-btn" onclick="showTab(this, 'day8')">7/9 (四)</button>
+        <button class="nav-btn" onclick="showTab(this, 'day9')">7/10 (五)</button>
+        <button class="nav-btn" onclick="showTab(this, 'day10')">7/11 (六)</button>
+        <button class="nav-btn" onclick="showTab(this, 'day11')">7/12 (日)</button>
+    </div>
+
+    <div id="checklist" class="content-container active">
+        <h2 class="day-header">💼 行前清單</h2>
+        <div class="checklist-wrapper">
+            <div class="check-group">
+                <h3>📄 重要證件與文件</h3>
+                <div class="check-item"><input type="checkbox" id="c1"><label for="c1">護照 (效期>6個月)</label></div>
+                <div class="check-item"><input type="checkbox" id="c2"><label for="c2">台灣駕照正本 + 日文譯本</label></div>
+                <div class="check-item"><input type="checkbox" id="c3"><label for="c3">Visit Japan Web QR Code</label></div>
+                <div class="check-item"><input type="checkbox" id="c4"><label for="c4">旅遊平安險 / 不便險</label></div>
+                <div class="check-item"><input type="checkbox" id="c5"><label for="c5">租車預約確認信</label></div>
+            </div>
+            <div class="check-group">
+                <h3>🧸 隨身必備物品</h3>
+                <div class="check-item"><input type="checkbox" id="c6"><label for="c6">日幣現金 / 信用卡</label></div>
+                <div class="check-item"><input type="checkbox" id="c7"><label for="c7">網卡 / Wi-Fi 分享器</label></div>
+                <div class="check-item"><input type="checkbox" id="c8"><label for="c8">防蚊液 / 蚊蟲叮咬</label></div>
+                <div class="check-item"><input type="checkbox" id="c9"><label for="c9">泳衣/泳帽/蛙鏡 (水樂園用)</label></div>
+                <div class="check-item"><input type="checkbox" id="c10"><label for="c10">嬰兒推車</label></div>
+                <div class="check-item"><input type="checkbox" id="c11"><label for="c11">常備藥品</label></div>
+                <div class="check-item"><input type="checkbox" id="c12"><label for="c12">小孩安撫玩具 / 機上零食</label></div>
+                <div class="check-item"><input type="checkbox" id="c13"><label for="c13">防曬乳 / 防曬外套 / 帽子 / 墨鏡</label></div>
+                <div class="check-item"><input type="checkbox" id="c14"><label for="c14">免洗毛巾 / 內褲</label></div>
+                <div class="check-item"><input type="checkbox" id="c15"><label for="c15">購物袋</label></div>
+                <div class="check-item"><input type="checkbox" id="c16"><label for="c16">自拍棒</label></div>
+                <div class="check-item"><input type="checkbox" id="c17"><label for="c17">充電線 / 轉接頭</label></div>
+                <div class="check-item"><input type="checkbox" id="c18"><label for="c18">抽真空機</label></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="day1" class="content-container">
+        <h2 class="day-header">Day 1</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline-item">
+                <div class="time-badge">10:50</div>
+                <div class="spot-title">🛬 抵達福岡機場</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>抵達後辦理入境手續，提取行李後準備前往租車。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Fukuoka+Airport" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">12:00</div>
+                <div class="spot-title">🚗 福岡Toyota 租車</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：08:00–20:00</span></div>
+                    <div class="info-row"><span class="info-icon">🚨</span><span class="highlight-text">提醒：務必確認 ETC 卡與 KEP 高速公路 PASS 是否開通。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Toyota+Rent+a+Car+Fukuoka" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">13:00</div>
+                <div class="spot-title">👅 GyutanYaki Yokomasa 牛舌(午餐)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：11:00–22:00</span></div>
+                    <div class="info-row"><span class="info-icon">💰</span><span>費用：厚切定食約 ¥2,500 起</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>建議避開正餐尖峰期以節省排隊時間，為旅程補充體力。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=GyutanYaki+Senmonten+Yokomasa" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">14:30</div>
+                <div class="spot-title">✨ 福岡Teamlab 森林</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：11:00–20:00 (假日至21:00)</span></div>
+                    <div class="info-row"><span class="info-icon">🎟️</span><span>門票費用：大人 ¥2,400 / 兒童(4-15歲) ¥700，3歲以下免費</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>建議手機先下載好專屬APP，方便館內互動捕捉動物。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=teamLab+Forest+Fukuoka" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">16:00</div>
+                <div class="spot-title">🎀 三麗鷗夢幻公園</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：10:00–20:00</span></div>
+                    <div class="info-row"><span class="info-icon">🎟️</span><span>門票費用：入場免費，遊樂設施需另外購買點數券。</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>就位於BOSS E·ZO FUKUOKA 7樓，與Teamlab同棟，非常適合小孩放電。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Sanrio+Character+Park+Fukuoka" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">17:00</div>
+                <div class="spot-title">🛍️ 購物：mont-bell天神 / 天神mina</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：10:00–20:00</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>結帳時記得出示護照辦理免稅手續(Tax-free)。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Mina+Tenjin" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">19:30</div>
+                <div class="spot-title">🍜 一蘭拉麵總店(晚餐)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：24小時營業</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>總店限定！可以選擇復古的「屋台座位」或傳統的「味集中座位」。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Ichiran+Main+Office" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">20:30</div>
+                <div class="spot-title">🏨 福岡索拉利亞西鐵酒店</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>辦理入住，地點絕佳，樓下就是熱鬧商圈。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Solaria+Nishitetsu+Hotel+Fukuoka" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="day2" class="content-container">
+        <h2 class="day-header">Day 2</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline-item">
+                <div class="time-badge">11:30</div>
+                <div class="spot-title">🍣 葫蘆壽司(午餐)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：11:30–14:30 / 17:00–21:00</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>在地人氣排隊名店，午間套餐CP值極高，建議提早排隊。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Hyotan+Sushi+Fukuoka" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">13:00</div>
+                <div class="spot-title">🌳 海之中道海濱公園</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：09:30–17:30</span></div>
+                    <div class="info-row"><span class="info-icon">🎟️</span><span>票價：大人 ¥450，國中生以下免費</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>園區非常廣大，強烈建議入園先租借腳踏車移動。熱門的鯨魚雲朵蹦蹦床與動物之森是必玩重點！</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Uminonakamichi+Seaside+Park" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">17:00</div>
+                <div class="spot-title">🛍️ 購物: 博多車站周邊</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：10:00–20:00 (餐廳至22:00)</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>各大百貨聚集地，尋找伴手禮與限定商品。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Hakata+Station" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">19:30</div>
+                <div class="spot-title">🍢 Chinpunkampun Hakata串燒(晚餐)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：17:00–23:30</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>外觀像是一面黑色牆壁的隱藏版居酒屋，人氣極高，務必提前預約。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Chinpunkampun+Hakata" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">21:30</div>
+                <div class="spot-title">🏨 福岡索拉利亞西鐵酒店</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>返回飯店休息。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Solaria+Nishitetsu+Hotel+Fukuoka" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="day3" class="content-container">
+        <h2 class="day-header">Day 3</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline-item">
+                <div class="time-badge">10:30</div>
+                <div class="spot-title">🛍️ 福岡購物</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>離開福岡前的最後採買時間。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Tenjin+Fukuoka" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">12:00</div>
+                <div class="spot-title">🍽️ 午餐 (待決定)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>隨心所欲選擇想吃的福岡美食。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Fukuoka+Restaurants" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">13:30</div>
+                <div class="spot-title">🚗 駕車前往長崎</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>車程約1小時40分鐘。長途車程可讓小孩在車上稍作午休。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Nagasaki" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">15:30</div>
+                <div class="spot-title">🎡 豪斯登堡</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：09:00–21:00</span></div>
+                    <div class="info-row"><span class="info-icon">🎟️</span><span>門票費用 (星光票)：大人 ¥5,900 / 國小 ¥3,900</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>絕美歐風小鎮，晚上光雕秀與燈飾必看！</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Huis+Ten+Bosch" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">20:30</div>
+                <div class="spot-title">🏨 歐洲酒店 豪斯登堡</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>入住園區內的高級歐風飯店。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Europe+Huis+Ten+Bosch" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="day4" class="content-container">
+        <h2 class="day-header">Day 4</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline-item">
+                <div class="time-badge">10:00</div>
+                <div class="spot-title">🏰 豪斯登堡全日遊</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>今天繼續攻略園區內的遊樂設施與表演。</span></div>
+                    <div class="info-row"><span class="info-icon">🚨</span><span class="highlight-text">提醒：夏日防曬要做好，隨時補充水分。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Huis+Ten+Bosch" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">20:00</div>
+                <div class="spot-title">🏨 歐洲酒店 豪斯登堡</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>連泊休息。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Europe+Huis+Ten+Bosch" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="day5" class="content-container">
+        <h2 class="day-header">Day 5</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline-item">
+                <div class="time-badge">11:30</div>
+                <div class="spot-title">🚗 駕車前往別府</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>車程約 2 小時 30 分鐘，建議準備好車上的安撫零食或音樂。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Beppu" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">14:00</div>
+                <div class="spot-title">🎢 城島高原遊樂園 / 🐬 海之卵水族館</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>樂園 10:00-17:00 / 水族館 09:00-17:00</span></div>
+                    <div class="info-row"><span class="info-icon">🎟️</span><span>樂園入園 ¥1,500 / 水族館大人 ¥2,600</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>可依當天天氣決定，晴天推薦城島高原(木製過山車)，雨天備案海之卵水族館。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kijima+Kogen+Park" target="_blank" class="map-btn">📍 地圖導航 (樂園)</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">17:30</div>
+                <div class="spot-title">♨️ 杉乃井酒店(一泊二食)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🚨</span><span class="highlight-text">提醒：準備好泳衣、泳帽，準備去水上樂園玩水囉！</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>晚上享用超豪華自助餐。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Suginoi+Hotel+Beppu" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="day6" class="content-container">
+        <h2 class="day-header">Day 6</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline-item">
+                <div class="time-badge">10:00</div>
+                <div class="spot-title">🚡 別府纜車</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：09:00–17:00</span></div>
+                    <div class="info-row"><span class="info-icon">🎟️</span><span>來回票：大人 ¥1,800 / 兒童 ¥900</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>可一覽別府灣絕美海景。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Beppu+Ropeway" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">13:00</div>
+                <div class="spot-title">🦁 九州自然動物園 (Jungle Bus)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：09:00–16:30</span></div>
+                    <div class="info-row"><span class="info-icon">🎟️</span><span>入園 ¥2,600 + 叢林巴士 ¥1,300</span></div>
+                    <div class="info-row"><span class="info-icon">🚨</span><span class="highlight-text">提醒：叢林巴士非常熱門，抵達後請先購票劃位。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=African+Safari+Oita" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">17:00</div>
+                <div class="spot-title">♨️ 杉乃井酒店(一泊二食)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>連泊休息，繼續泡湯享受。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Suginoi+Hotel+Beppu" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="day7" class="content-container">
+        <h2 class="day-header">Day 7</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline-item">
+                <div class="time-badge">10:00</div>
+                <div class="spot-title">🚗 駕車前往阿蘇</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>車程約 1 小時 30 分鐘。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Aso" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">11:30</div>
+                <div class="spot-title">⛰️ 大觀峰</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>24小時開放 (免費)</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>景點介紹：阿蘇北外輪山的最高峰，擁有360度絕佳視野，可將阿蘇五岳（釋迦涅槃像）與廣闊的九重山脈盡收眼底。山區風大請準備薄外套。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Daikanbo" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">12:30</div>
+                <div class="spot-title">🌋 米塚展望地</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>景點由來：外觀呈現可愛的倒碗狀，是約3300年前火山爆發形成的寄生火山。傳說是當地守護神「健磐龍命」用米堆積而成，頂部的凹陷則是因為祂將米分發給窮人所留下的痕跡。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Komezuka" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">12:50</div>
+                <div class="spot-title">🍽️ 午餐(待決定)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>沿途尋找在地餐廳或公路休息站用餐。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Aso+Restaurants" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">14:00</div>
+                <div class="spot-title">🐎 阿蘇騎馬 (草千里) & 阿蘇博物館</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>騎馬體驗約 09:00–16:00 / 博物館 09:00–17:00</span></div>
+                    <div class="info-row"><span class="info-icon">🎟️</span><span>博物館門票：大人 ¥1,100 / 小中學生 ¥550</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>大草原上的親子騎馬體驗，並可至博物館了解火山地質歷史。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kusasenrigahama" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">17:00</div>
+                <div class="spot-title">🏨 KAMENOI HOTEL Aso(一泊二食)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>辦理入住，享受一泊二食的溫泉飯店時光。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kamenoi+Hotel+Aso" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="day8" class="content-container">
+        <h2 class="day-header">Day 8</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline-item">
+                <div class="time-badge">10:30</div>
+                <div class="spot-title">🚗 駕車前往高千穗</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>車程約 1 小時，離開阿蘇前往神話之鄉。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Takachiho" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">11:30</div>
+                <div class="spot-title">🚂 購買高千穗小火車車票</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>提早抵達確保能買到想要班次的車票。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Amaterasu+Railway" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">12:00</div>
+                <div class="spot-title">🍱 高千穗牛餐廳「和」(午餐)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：11:00–14:30</span></div>
+                    <div class="info-row"><span class="info-icon">💰</span><span>費用：和牛套餐約 ¥3,000-5,000</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>品嚐頂級高千穗和牛，建議提早排隊或訂位。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Takachiho+Gyu+Restaurant+Nodoka" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">15:00</div>
+                <div class="spot-title">🛶 高千穗峽谷划船</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🎟️</span><span>票價：¥5,100 / 船 (最多3人)</span></div>
+                    <div class="info-row"><span class="info-icon">🚨</span><span class="highlight-text">提醒：划船超級熱門，務必提早兩週上網預約場次！</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Takachiho+Gorge+Boat" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">15:50</div>
+                <div class="spot-title">🥢 千穂之家 元祖流水麵</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：10:00–17:00 (16:30最後點餐)</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>體驗竹管夾麵的樂趣，非常受小朋友歡迎！</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Chiho+no+Ie" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">16:30</div>
+                <div class="spot-title">⛩️ 天岩戶神社 & 天安河原</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>全天開放</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>充滿神話色彩的秘境，步行路段多碎石，推車較不方便。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Amanoyasu+Kawara" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">17:30</div>
+                <div class="spot-title">🚗 駕車前往熊本市區</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>車程約 1 小時 30 分鐘。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kumamoto" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">20:00</div>
+                <div class="spot-title">🍽️ 晚餐(待決定)</div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">21:00</div>
+                <div class="spot-title">🏨 The Blossom Kumamoto</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>抵達飯店休息。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=THE+BLOSSOM+KUMAMOTO" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="day9" class="content-container">
+        <h2 class="day-header">Day 9</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline-item">
+                <div class="time-badge">10:30</div>
+                <div class="spot-title">🚗 駕車前往天草市</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>車程約 1 小時 50 分鐘，準備迎接海洋與野生海豚。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Amakusa" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">12:30</div>
+                <div class="spot-title">🚢 購買賞海豚船票</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🎟️</span><span>票價：大人約 ¥3,000</span></div>
+                    <div class="info-row"><span class="info-icon">🚨</span><span><br>* 天草市海豚中心 10:00 / 11:30 / 13:00 / 14:30 / 16:00 (約1小時)<br>* miocamino AMAKUSA sea cruise 10:00 / 13:00 / 15:00 (約2小時)</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Amakusa+Dolphin+Watching" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">13:00</div>
+                <div class="spot-title">🍣 海膽本舖 丸健水產(午餐)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：11:00–16:00</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>海膽受氣候與漁獲影響，建議早點去品嚐天草頂級的新鮮海膽丼。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Maruken+Suisan+Amakusa" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">14:30</div>
+                <div class="spot-title">🐬 出海賞海豚</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>高達 98% 機率看見野生海豚！海風較大請備薄外套。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Amakusa+Dolphin+Watching" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">15:00</div>
+                <div class="spot-title">⛩️ 倉岳神社 / 🍩 海洋甜甜圈</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>倉岳神社可俯瞰天草諸島，號稱天空之鳥居。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kuratake+Shrine" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">17:00</div>
+                <div class="spot-title">🚗 駕車返回熊本市區</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>車程約 1 小時 50 分鐘。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kumamoto" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">19:00</div>
+                <div class="spot-title">🍽️ 晚餐(待決定)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>返回市區後自由選擇想吃的熊本美食。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kumamoto+Restaurants" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">20:30</div>
+                <div class="spot-title">🏨 The Blossom Kumamoto</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>抵達飯店休息。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=THE+BLOSSOM+KUMAMOTO" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="day10" class="content-container">
+        <h2 class="day-header">Day 10</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline-item">
+                <div class="time-badge">10:00</div>
+                <div class="spot-title">🏯 熊本城 & 櫻之馬場城彩苑(午餐)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：09:00–17:00</span></div>
+                    <div class="info-row"><span class="info-icon">🎟️</span><span>票價：大人 ¥800 / 中小學生 ¥300</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>城彩苑有許多特色小吃（海膽可樂餅、抹茶冰）。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kumamoto+Castle" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">13:30</div>
+                <div class="spot-title">🛍️ 購物: 下通商店街 / Amu Plaza</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：10:00–20:00</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>藥妝與伴手禮最後大採購！</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Shimotori+Shopping+Arcade" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">16:30</div>
+                <div class="spot-title">🐻 熊本熊廣場</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：10:00–17:00</span></div>
+                    <div class="info-row"><span class="info-icon">🚨</span><span class="highlight-text">提醒：部長表演時間通常為 11:30 與 16:30，請提前排隊。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kumamon+Square" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">19:00</div>
+                <div class="spot-title">🥩 黒毛和牛 博多牛まぶし 武蔵(晚餐)</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🕒</span><span>營業時間：11:00–15:00 / 17:30–22:00</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>招牌是美味的黑毛和牛「牛三吃」(牛まぶし)，強烈建議事先訂位。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Hakata+Gyu+Mabushi+Musashi" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">21:00</div>
+                <div class="spot-title">🏨 The Blossom Kumamoto</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>連泊休息，今晚努力打包行李。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=THE+BLOSSOM+KUMAMOTO" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+        </div>
+
+        <div class="backup-plan">
+            <h3><span style="font-size: 20px;">☂️</span> 備案行程 (Alternative)</h3>
+            <p>蘆北海濱綜合公園 + 熊本熊港八代</p>
+        </div>
+    </div>
+
+    <div id="day11" class="content-container">
+        <h2 class="day-header">Day 11</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline-item">
+                <div class="time-badge">09:30</div>
+                <div class="spot-title">🎒 整理行囊，準備退房</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">💡</span><span>再次檢查護照與隨身物品。</span></div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">10:30</div>
+                <div class="spot-title">🚗 前往熊本機場還車</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">🚨</span><span class="highlight-text">提醒：租車歸還前記得加滿油，並保留收據。</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kumamoto+Airport" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+            <div class="timeline-item">
+                <div class="time-badge">13:30</div>
+                <div class="spot-title">🛫 搭機返回高雄</div>
+                <div class="spot-info">
+                    <div class="info-row"><span class="info-icon">✈️</span><span>航班：華航 CI0199 (13:30起飛 > 15:10抵達)</span></div>
+                    <div class="info-row"><span class="info-icon">💡</span><span>帶著滿滿的快樂回憶平安到家！</span></div>
+                </div>
+                <a href="https://www.google.com/maps/search/?api=1&query=Kumamoto+Airport" target="_blank" class="map-btn">📍 地圖導航</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function showTab(element, tabId) {
+        // 隱藏所有內容區塊
+        const sections = document.querySelectorAll('.content-container');
+        sections.forEach(section => {
+            section.classList.remove('active');
+        });
+
+        // 移除所有按鈕的 active 狀態
+        const btns = document.querySelectorAll('.nav-btn');
+        btns.forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // 顯示被點選的區塊並加上 active
+        document.getElementById(tabId).classList.add('active');
+        element.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
